@@ -11,7 +11,7 @@ public class EvernoteController {
 	@Autowired
 	private ITokenHolder token;
 
-	@RequestMapping("/**")
+	@RequestMapping("/token")
 	public Object test() {
 		return token.getToken();
 	}
