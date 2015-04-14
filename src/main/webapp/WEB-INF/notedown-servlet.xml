@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:context="http://www.springframework.org/schema/context"
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="
         http://www.springframework.org/schema/beans
@@ -19,15 +18,17 @@
 
 	<mvc:interceptors>
 		<mvc:interceptor>
-			<mvc:mapping path="/evernote/*" />
+			<mvc:mapping path="/evernote/**" />
 			<bean class="com.zimmem.notedown.evernote.AuthenticationInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
 
 	<mvc:annotation-driven>
 		<mvc:message-converters>
-			<bean
-				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<constructor-arg name="objectMapper">
+					<bean class="com.zimmem.notedown.evernote.ObjectMapperFactory" factory-method="createObjectMapper" />
+				</constructor-arg>
 				<property name="supportedMediaTypes">
 					<list>
 						<value>text/plain</value>
@@ -44,8 +45,7 @@
 				</property>
 			</bean>
 			<bean class="org.springframework.http.converter.FormHttpMessageConverter" />
-			<bean
-				class="org.springframework.http.converter.ByteArrayHttpMessageConverter">
+			<bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter">
 				<property name="supportedMediaTypes">
 					<list>
 						<value>image/jpeg</value>
@@ -56,15 +56,20 @@
 		</mvc:message-converters>
 	</mvc:annotation-driven>
 
-	<mvc:default-servlet-handler
-		default-servlet-name="default" />
+	<mvc:default-servlet-handler default-servlet-name="default" />
 
 
-	<bean class="com.zimmem.notedown.evernote.oauth.OAuthServiceFactory"
-		factory-method="createOAuthService">
+	<bean class="com.zimmem.notedown.evernote.oauth.OAuthServiceFactory" factory-method="createOAuthService">
 		<constructor-arg name="key" value="${evernote.oauth.key}"></constructor-arg>
 		<constructor-arg name="secret" value="${evernote.oauth.secret}"></constructor-arg>
 		<constructor-arg name="callbackServer" value="${notedown.server}"></constructor-arg>
 	</bean>
+
+	<bean id="evernoteClientFactory" class="com.zimmem.notedown.evernote.EvernoteClientFactory"></bean>
+
+	<bean id="userStore" factory-bean="evernoteClientFactory" factory-method="createUserStoreCLient" scope="request" />
+
+
+	<bean id="noteStore" factory-bean="evernoteClientFactory" factory-method="createNoteStoreCLient" scope="request" />
 </beans>
 

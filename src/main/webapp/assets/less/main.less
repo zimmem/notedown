@@ -1,9 +1,95 @@
+//@import "../libs/fontello/css/fontello.css";
+.mask-layer {
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	background-color: rgba(255, 255, 255, 0.5);
+	z-index: 10;
+	transition-duration: .3s;
+	display: none;
+}
+
+.toggle-pannel {
+	transition-duration: .3s;
+	z-index: 100;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	width: 300px;
+	background-color: #FFF;
+	box-shadow: 0 0px 30px rgba(0, 0, 0, 0.5);
+	&.note-pannel {
+		left: -300px;
+		background-color: #282828;
+		.switcher {
+			position: absolute;
+			width: 40px;
+			height: 40px;
+			right: -40px;
+			top: 20px;
+			background: rgba(219, 204, 193, 0.14);
+			font-size: 30px;
+			color: rgba(0, 0, 0, 0.38);
+			border-radius: 0 5px 5px 0;
+		}
+
+		&.pop {
+			left: 0px;
+		}
+	}
+
+	&.user-pannel {
+		right: -300px;
+		&.pop {
+			right: 0px;
+		}
+	}
+}
+
+.note-list {
+	padding: 10px 0;
+	li {
+		list-style-type: none;
+		padding: 10px;
+		color: #709600;
+		font-weight: bold;
+		cursor: pointer;
+		&:hover {
+			background: #3F3F3F;
+		}
+	}
+}
+
 .editor-wrapper {
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
 	bottom: 0;
 	right: 50%;
+	.toolbar {
+		padding: 5px;
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		background: rgba(86, 15, 15, 0.45);
+		z-index: 5;
+		border-radius: 10px;
+		i {
+			font-size: 25px;
+			color: #B8A540;
+			display: inline-block;
+			padding: 5px;
+			cursor: pointer;
+			border: 1px solid transparent;
+			&:hover {
+				border-radius: 5px;
+				border: 1px solid #03070D;
+				background: #25545A;
+			}
+		}
+	}
 }
 
 #editor {
@@ -11,15 +97,21 @@
 	top: 0;
 	left: 0;
 	bottom: 0;
-	right:0;
+	right: 0;
 }
 
 .preview {
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 50%;
 	bottom: 0;
 	right: 0;
-	margin : 50px;
+	margin: 50px;
 }
 
+// ace height
+//.ace_heading.ace_1{
+//	font-size :2em;
+//	font-weight:bold;
+//	color : green;
+//}
