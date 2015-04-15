@@ -58,13 +58,6 @@
 
 	<mvc:default-servlet-handler default-servlet-name="default" />
 
-
-	<bean class="com.zimmem.notedown.evernote.oauth.OAuthServiceFactory" factory-method="createOAuthService">
-		<constructor-arg name="key" value="${evernote.oauth.key}"></constructor-arg>
-		<constructor-arg name="secret" value="${evernote.oauth.secret}"></constructor-arg>
-		<constructor-arg name="callbackServer" value="${notedown.server}"></constructor-arg>
-	</bean>
-
 	<bean id="evernoteClientFactory" class="com.zimmem.notedown.evernote.EvernoteClientFactory"></bean>
 
 	<bean id="userStore" factory-bean="evernoteClientFactory" factory-method="createUserStoreCLient" scope="request" />

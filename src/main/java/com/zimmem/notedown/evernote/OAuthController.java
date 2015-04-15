@@ -14,23 +14,26 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.zimmem.notedown.evernote.oauth.OAuthServiceFactory;
+
 @Controller
 public class OAuthController {
 
-	@Autowired
-	private OAuthService oauthService;
+    @Autowired
+    private OAuthServiceFactory oAuthServiceFactory;
 
-	@RequestMapping("evernote_oauth_callback")
-	public void callback(@RequestParam("oauth_token") String oauthToken,
-			@RequestParam("oauth_verifier") String oauthVerifier,
-			HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
-		Token accessToken = oauthService.getAccessToken((Token) request
-				.getSession().getAttribute("request_token"), new Verifier(
-				oauthVerifier));
-		Cookie cookie = new Cookie("en_access_token", accessToken.getToken());
-		cookie.setMaxAge(9999999);
-		response.addCookie(cookie);
-		response.sendRedirect("/evernote/xxxxx");
-	}
+    @RequestMapping("evernote_oauth_callback")
+    public void callback(@RequestParam("oauth_token") String oauthToken,
+                         @RequestParam("oauth_verifier") String oauthVerifier,
+                         HttpServletRequest request, HttpServletResponse response)
+                                                                                  throws IOException {
+        OAuthService oAuthService = oAuthServiceFactory.createOAuthService();
+        Token accessToken = oAuthService.getAccessToken((Token) request.getSession().getAttribute("request_token"),
+                                                        new Verifier(oauthVerifier));
+        Cookie cookie = new Cookie("en_access_token", accessToken.getToken());
+        cookie.setMaxAge(9999999);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        response.sendRedirect("/evernote/notes");
+    }
 }

@@ -14,6 +14,9 @@
 		<spring.version>4.1.6.RELEASE</spring.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jackson2.version>2.4.3</jackson2.version>
+		
+		<!-- do not user https when upload to gae -->
+		<insecure>true</insecure>
 	</properties>
 
 	<dependencies>
@@ -149,7 +152,7 @@
 		</resources>
 
 		<filters>
-			<filter>${mirco.wiki.filter}</filter>
+			<filter>${notedown.filter}</filter>
 		</filters>
 
 
@@ -175,6 +178,9 @@
 				<version>2.4</version>
 				<configuration>
 					<archiveClasses>true</archiveClasses>
+					<filters>
+						<filter>${notedown.filter}</filter>
+					</filters>
 					<webResources>
 						<!-- in order to interpolate version from pom into appengine-web.xml -->
 						<resource>
@@ -233,7 +239,7 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
-				<mirco.wiki.filter>dev.properties</mirco.wiki.filter>
+				<notedown.filter>dev.properties</notedown.filter>
 				<maven.test.skip>true</maven.test.skip>
 			</properties>
 		</profile>

@@ -98,7 +98,6 @@ $(function() {
 			});
 			note.fetch({
 				success : function() {
-					debugger;
 					that.trigger('note.open', note);
 				}
 			});
@@ -215,7 +214,6 @@ $(function() {
 	var notePannel = new NoteListPannel();
 	var editor = new NoteEditor();
 	editor.listenTo(notePannel, 'note.open', function(note) {
-		debugger;
 		editor.update(note);
 	})
 
