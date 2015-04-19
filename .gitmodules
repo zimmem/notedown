@@ -1,0 +1,3 @@
+[submodule "src/main/stackedit"]
+	path = src/main/stackedit
+	url = git@github.com:zimmem/stackedit.git

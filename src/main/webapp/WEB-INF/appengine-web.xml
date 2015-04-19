@@ -11,6 +11,8 @@
 	<static-files>
 		<include path="/favicon.ico" />
 		<include path="/assets/**.*" />
+		<include path="/res-min/**.*" />
+		<include path="/res/**.*" />
 		<include path="/index.html" />
 	</static-files>
 	
