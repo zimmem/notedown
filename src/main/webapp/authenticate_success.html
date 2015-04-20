@@ -1,0 +1,12 @@
+<!doctype html>
+<html>
+	<head>
+		<script>
+			window.opener.postMessage('evernote.authenticate.success', location.origin);
+			setTimeout(function(){
+				window.close();
+			}, 500);
+		</script>
+	</head>
+	<body></body>
+</html>

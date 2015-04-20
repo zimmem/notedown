@@ -22,7 +22,7 @@ public class OAuthController {
     @Autowired
     private OAuthServiceFactory oAuthServiceFactory;
 
-    @RequestMapping("evernote_oauth_callback")
+    @RequestMapping("/evernote_oauth_callback")
     public void callback(@RequestParam("oauth_token") String oauthToken,
                          @RequestParam("oauth_verifier") String oauthVerifier,
                          HttpServletRequest request, HttpServletResponse response)
@@ -34,6 +34,11 @@ public class OAuthController {
         cookie.setMaxAge(9999999);
         cookie.setPath("/");
         response.addCookie(cookie);
-        response.sendRedirect("/evernote/notes");
+        response.sendRedirect("/authenticate_success.html");
+    }
+    
+    @RequestMapping("/evernote/authenticate")
+    public String authenticate()  throws IOException {
+    	return "redirect:/authenticate_success.html";
     }
 }
