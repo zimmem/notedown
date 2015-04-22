@@ -31,7 +31,6 @@
 				</constructor-arg>
 				<property name="supportedMediaTypes">
 					<list>
-						<value>text/plain</value>
 						<value>text/json</value>
 						<value>application/json</value>
 					</list>
