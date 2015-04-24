@@ -24,6 +24,8 @@ public class MNote {
     private String title;
 
     private String content;
+    
+    private long updated;
 
     public Note toNote() {
         Note note = new Note();
@@ -38,6 +40,7 @@ public class MNote {
         mNote.guid = note.getGuid();
         mNote.title = note.getTitle();
         mNote.content = parseContent(note.getContent());
+        mNote.updated = note.getUpdated();
         return mNote;
     }
 
@@ -84,7 +87,15 @@ public class MNote {
         this.guid = guid;
     }
 
-    public static void main(String[] args) {
+    public long getUpdated() {
+		return updated;
+	}
+
+	public void setUpdated(long updated) {
+		this.updated = updated;
+	}
+
+	public static void main(String[] args) {
         MNote mote = new MNote();
         mote.setContent("aaaa");
         Note note = mote.toNote();
