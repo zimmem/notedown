@@ -204,6 +204,7 @@
 					<!-- address>0.0.0.0</address> <port>8080</port -->
 					<!-- Comment in the below snippet to enable local debugging with a remove 
 						debugger like those included with Eclipse or IntelliJ -->
+					<insecure>true</insecure>
 					<jvmFlags>
 						<jvmFlag>-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n</jvmFlag>
 					</jvmFlags>
@@ -246,7 +247,7 @@
 		</profile>
 
 		<profile>
-			<id>release</id>
+			<id>deploy</id>
 			<properties>
 				<maven.test.skip>true</maven.test.skip>
 			</properties>
@@ -263,6 +264,12 @@
 									<directory>${basedir}/src/main/stackedit/public</directory>
 									<filtering>false</filtering>
 									<targetPath>/</targetPath>
+									<includes>
+										<include>res-min/**</include>
+									</includes>
+									<excludes>
+										<exclude>res/**</exclude>
+									</excludes>
 								</resource>
 							</webResources>
 						</configuration>
