@@ -223,6 +223,10 @@ define([
 	addEventHook("onNoteMgrCreated");
 	addEventHook("onNotesRefresh");
 	
+	
+	addEventHook("onCodeThemeInited");
+	addEventHook("onCodeThemeCreated");
+	
 
 	var onPreviewFinished = createEventHook("onPreviewFinished");
 	var onAsyncPreviewListenerList = getExtensionListenerList("onAsyncPreview");

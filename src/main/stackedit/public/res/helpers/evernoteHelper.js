@@ -1,6 +1,15 @@
-define([ "jquery",'underscore', "constants", "core", "utils", "storage", "logger", 
-		"eventMgr", "classes/AsyncTask" ], function($, _, C, core, utils, storage,
-		log, eventMgr, AsyncTask) {
+define([
+    "jquery",
+     'underscore',
+     "constants", 
+     "core", 
+     "utils", 
+     "storage", 
+     "logger", 
+	"eventMgr", 
+	"classes/AsyncTask", 
+	'codeTheme' ], 
+function($, _, C, core, utils, storage, log, eventMgr, AsyncTask, codeTheme) {
 
 	var evernoteHelper = {};
 
@@ -76,6 +85,7 @@ define([ "jquery",'underscore', "constants", "core", "utils", "storage", "logger
 		task.enqueue();
 	};
 	
+	
 	evernoteHelper.postNote = function(file, callback){
 		
 		if(!file){
@@ -87,12 +97,7 @@ define([ "jquery",'underscore', "constants", "core", "utils", "storage", "logger
 		var markdown = file.content;
 		var $clone = $('#preview-contents').clone();
 		
-		function removeAttribute($root, attName){
-			$root.removeAttr(attName);
-			$root.children().each(function(i, e){
-				removeAttribute($(e), attName);
-			});
-		}
+		applayCss(codeTheme.element.sheet.rules,  $clone);
 		
 		//remove all unsupport attribute
 		removeAttribute($clone, 'id');
@@ -139,6 +144,8 @@ define([ "jquery",'underscore', "constants", "core", "utils", "storage", "logger
 			callback();
 		});
 		task.enqueue();
+		
+		
 	};
 
 	function checkAuth(task) {
@@ -173,6 +180,22 @@ define([ "jquery",'underscore', "constants", "core", "utils", "storage", "logger
 	eventMgr.addListener('onReady', function(){
 		evernoteHelper.getUser();
 	});
+	
+	function removeAttribute($root, attName){
+		$root.removeAttr(attName);
+		$root.children().each(function(i, e){
+			removeAttribute($(e), attName);
+		});
+	}
+	
 
+	function applayCss(rules , $root){
+		_.each(rules, function(rule){
+			$root.find(rule.selectorText).each(function(i, e){
+				e.style.cssText += rule.style.cssText;
+			});
+		});
+	}
+	
 	return evernoteHelper;
 });

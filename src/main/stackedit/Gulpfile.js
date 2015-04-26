@@ -69,7 +69,8 @@ gulp.task('copy-requirejs', ['clean-requirejs'], function() {
 
 gulp.task('requirejs', [
 	'copy-requirejs',
-	'constants'
+	'constants',
+	'code-less'
 ], function() {
 	return requirejs({
 		baseUrl: 'public/res',
@@ -110,8 +111,19 @@ gulp.task('bower-requirejs', function(cb) {
  */
 
 gulp.task('clean-less', function() {
-	return gulp.src('./public/res-min/themes')
+	return gulp.src(['./public/res-min/themes',
+	                 './public/res-min/code.styles'])
 		.pipe(clean());
+});
+
+gulp.task('code-less', ['clean-less'], function() {
+	return gulp.src([
+		'./public/res/code.styles/default.less'
+	])
+		.pipe(less({
+			compress: true
+		}))
+		.pipe(gulp.dest('./public/res-min/code.styles/'));
 });
 
 gulp.task('less', ['clean-less'], function() {
@@ -218,6 +230,7 @@ gulp.task('default', function(cb) {
 			'jshint',
 			'requirejs',
 			'less',
+			'code-less',
 			'copy-font',
 			'copy-img'
 		],

@@ -27,9 +27,9 @@ define([
 		],
 		intraword: true,
 		comments: true,
-		highlighter: "highlight"
+		highlighter: "prettify"
 	};
-
+	
 	markdownExtra.onLoadSettings = function() {
 		function hasExtension(extensionName) {
 			return _.some(markdownExtra.config.extensions, function(extension) {

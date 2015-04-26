@@ -12979,7 +12979,7 @@ function() {
   extensions: [ "fenced_code_gfm", "tables", "def_list", "attr_list", "footnotes", "smartypants", "strikethrough", "newlines" ],
   intraword: !0,
   comments: !0,
-  highlighter: "highlight"
+  highlighter: "prettify"
  }, l.onLoadSettings = function() {
   function e(e) {
    return t.some(l.config.extensions, function(t) {
@@ -20834,7 +20834,8 @@ function() {
  d("onSyncRunning"), d("onSyncSuccess"), d("onSyncImportSuccess"), d("onSyncExportSuccess"), 
  d("onSyncRemoved"), d("onLayoutCreated"), d("onLayoutResize"), d("onExtensionButtonResize"), 
  d("onPagedownConfigure"), d("onSectionsCreated"), d("onCursorCoordinates"), d("onEditorPopover"), 
- d("onTweet"), d("onNoteMgrCreated"), d("onNotesRefresh");
+ d("onTweet"), d("onNoteMgrCreated"), d("onNotesRefresh"), d("onCodeThemeInited"), 
+ d("onCodeThemeCreated");
  var g, v, b = u("onPreviewFinished"), y = c("onAsyncPreview");
  p.onAsyncPreview = function() {
   function e(n) {
@@ -24643,19 +24644,39 @@ this.DIFF_EQUAL = DIFF_EQUAL, define("diff_match_patch_uncompressed", function(e
  return r.addListener("onUserActive", function() {
   p = !0;
  }), r.addListener("onPeriodicRun", o), i;
-}), define("helpers/evernoteHelper", [ "jquery", "underscore", "constants", "core", "utils", "storage", "logger", "eventMgr", "classes/AsyncTask" ], function(e, t, n, r, i, o, a, s, l) {
- function c(e) {
+}), define("text!../res-min/code.styles/default.css", [], function() {
+ return "pre.prettyprint{display:block;background-color:#333}pre .nocode{background-color:none;color:#000}pre .str{color:#ffa0a0}pre .kwd{color:#f0e68c;font-weight:bold}pre .com{color:#87ceeb}pre .typ{color:#98fb98}pre .lit{color:#cd5c5c}pre .pun{color:#fff}pre .pln{color:#fff}pre .tag{color:#f0e68c;font-weight:bold}pre .atn{color:#bdb76b;font-weight:bold}pre .atv{color:#ffa0a0}pre .dec{color:#98fb98}ol.linenums{margin-top:0;margin-bottom:0;color:#aeaeae}li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8{list-style-type:none}";
+}), define("codeTheme", [ "eventMgr", "text!../res-min/code.styles/default.css" ], function(e, t) {
+ var n = {};
+ return e.addListener("onReady", function() {
+  var r = n.element = document.createElement("style");
+  r.innerHTML = t, r.id = "code-theme", document.head.appendChild(r), e.onCodeThemeInited(n);
+ }), e.onCodeThemeCreated(n), n;
+}), define("helpers/evernoteHelper", [ "jquery", "underscore", "constants", "core", "utils", "storage", "logger", "eventMgr", "classes/AsyncTask", "codeTheme" ], function(e, t, n, r, i, o, a, s, l, c) {
+ function u(e) {
   o["evernote.login"] || e.error(new Error("Please connect to Evernote first!"));
  }
- var u = {}, d = !1;
- return u.authenticate = function() {
-  d || (window.addEventListener("message", function(e) {
-   e.origin == location.origin && "evernote.authenticate.success" === e.data && (u.getUser(), 
+ function d(t, n) {
+  t.removeAttr(n), t.children().each(function(t, r) {
+   d(e(r), n);
+  });
+ }
+ function p(e, n) {
+  t.each(e, function(e) {
+   n.find(e.selectorText).each(function(t, n) {
+    n.style.cssText += e.style.cssText;
+   });
+  });
+ }
+ var h = {}, f = !1;
+ return h.authenticate = function() {
+  f || (window.addEventListener("message", function(e) {
+   e.origin == location.origin && "evernote.authenticate.success" === e.data && (h.getUser(), 
    o["evernote.login"] = !0);
-  }), d = !0), window.open("/evernote/authenticate", "_blank", "height=600px, width=800px");
- }, u.listNotes = function(t) {
+  }), f = !0), window.open("/evernote/authenticate", "_blank", "height=600px, width=800px");
+ }, h.listNotes = function(t) {
   var n = new l();
-  c(n);
+  u(n);
   var r = null;
   n.onRun(function() {
    e.ajax({
@@ -24672,9 +24693,9 @@ this.DIFF_EQUAL = DIFF_EQUAL, define("diff_match_patch_uncompressed", function(e
   }), n.onSuccess(function() {
    t(void 0, r);
   }), n.enqueue();
- }, u.downloadNote = function(t, n) {
+ }, h.downloadNote = function(t, n) {
   var r = new l();
-  c(r);
+  u(r);
   var i = null;
   r.onRun(function() {
    e.ajax({
@@ -24691,45 +24712,40 @@ this.DIFF_EQUAL = DIFF_EQUAL, define("diff_match_patch_uncompressed", function(e
   }), r.onSuccess(function() {
    n(void 0, i);
   }), r.enqueue();
- }, u.postNote = function(n, r) {
-  function i(t, n) {
-   t.removeAttr(n), t.children().each(function(t, r) {
-    i(e(r), n);
-   });
-  }
+ }, h.postNote = function(n, r) {
   if (n) {
-   var o = n.guid ? "/evernote/notes/" + n.guid : "/evernote/notes", a = n.guid ? "PUT" : "POST", s = n.content, u = e("#preview-contents").clone();
-   i(u, "id"), i(u, "class");
-   var d = u.html().replace(/<br>/g, "<br/>").replace(/<hr>/g, "<hr/>");
-   console.info(d), d = [ "<div>", d, '<center style="display:none;">', s, "</center>", "</div>" ].join("");
-   var p = new l();
-   c(p), p.onRun(function() {
+   var i = n.guid ? "/evernote/notes/" + n.guid : "/evernote/notes", o = n.guid ? "PUT" : "POST", a = n.content, s = e("#preview-contents").clone();
+   p(c.element.sheet.rules, s), d(s, "id"), d(s, "class");
+   var h = s.html().replace(/<br>/g, "<br/>").replace(/<hr>/g, "<hr/>");
+   console.info(h), h = [ "<div>", h, '<center style="display:none;">', a, "</center>", "</div>" ].join("");
+   var f = new l();
+   u(f), f.onRun(function() {
     e.ajax({
-     url: o,
-     type: a,
+     url: i,
+     type: o,
      contentType: "application/json",
      beforeSend: function(e) {
       e.setRequestHeader("Content-Type", "application/json"), e.setRequestHeader("Accept", "application/json");
      },
      data: JSON.stringify(t.extend(t.clone(n.note), {
-      content: d
+      content: h
      })),
      success: function(e) {
       n.update(t.extend(e, {
        localEdite: !1
-      })), p.chain();
+      })), f.chain();
      },
      error: function() {
-      p.error();
+      f.error();
      }
     });
-   }), p.onError(function(e) {
+   }), f.onError(function(e) {
     r(e);
-   }), p.onSuccess(function() {
+   }), f.onSuccess(function() {
     r();
-   }), p.enqueue();
+   }), f.enqueue();
   }
- }, u.getUser = function() {
+ }, h.getUser = function() {
   var t = new l();
   t.onRun(function() {
    e.ajax({
@@ -24745,8 +24761,8 @@ this.DIFF_EQUAL = DIFF_EQUAL, define("diff_match_patch_uncompressed", function(e
    });
   }), t.enqueue();
  }, s.addListener("onReady", function() {
-  u.getUser();
- }), u;
+  h.getUser();
+ }), h;
 }), define("noteMgr", [ "underscore", "eventMgr", "helpers/evernoteHelper", "fileSystem", "classes/FileDescriptor", "utils" ], function(e, t, n, r, i, o) {
  var a = {};
  return a.listNots = function(e) {

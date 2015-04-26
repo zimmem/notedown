@@ -24,7 +24,7 @@ define([
         newConfig.syncPeriod = utils.getInputIntValue("#input-sync-period", event, 0);
         newConfig.syncShortcut = utils.getInputTextValue("#input-sync-shortcut", event);
     };
-
+    
     var fileMgr;
     buttonSync.onFileMgrCreated = function(f) {
         fileMgr = f;
