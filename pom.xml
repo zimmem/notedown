@@ -15,8 +15,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jackson2.version>2.4.3</jackson2.version>
 
-		<!-- do not user https when upload to gae -->
-		<insecure>true</insecure>
 	</properties>
 
 	<dependencies>
@@ -204,7 +202,6 @@
 					<!-- address>0.0.0.0</address> <port>8080</port -->
 					<!-- Comment in the below snippet to enable local debugging with a remove 
 						debugger like those included with Eclipse or IntelliJ -->
-					<insecure>true</insecure>
 					<jvmFlags>
 						<jvmFlag>-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n</jvmFlag>
 					</jvmFlags>
@@ -270,7 +267,7 @@
 		<profile>
 			<id>deploy</id>
 			<properties>
-				<notedown.filter>dev.properties</notedown.filter>
+				<notedown.filter>release.properties</notedown.filter>
 				<maven.test.skip>true</maven.test.skip>
 			</properties>
 
@@ -282,6 +279,11 @@
 						<version>2.4</version>
 						<configuration>
 							<webResources>
+						<resource>
+							<directory>${basedir}/src/main/webapp/WEB-INF</directory>
+							<filtering>true</filtering>
+							<targetPath>WEB-INF</targetPath>
+						</resource>
 								<resource>
 									<directory>${basedir}/src/main/stackedit/public</directory>
 									<filtering>false</filtering>
@@ -293,11 +295,6 @@
 									<excludes>
 										<exclude>res/**</exclude>
 									</excludes>
-								</resource>
-								<resource>
-									<directory>${basedir}/src/main/stackedit/public/res/bower-libs/MathJax</directory>
-									<filtering>false</filtering>
-									<targetPath>/res/bower-libs/MathJax</targetPath>
 								</resource>
 							</webResources>
 						</configuration>
