@@ -25237,7 +25237,7 @@ this.DIFF_EQUAL = DIFF_EQUAL, define("diff_match_patch_uncompressed", function(e
   "mousetrap-record": "bower-libs/mousetrap/plugins/record/mousetrap-record",
   toMarkdown: "bower-libs/to-markdown/src/to-markdown",
   text: "bower-libs/requirejs-text/text",
-  mathjax: "http://zimmem.github.io/notedown/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS_HTML",
+  mathjax: "http://notedown-cdn.zimmem.com/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS_HTML",
   bootstrap: "bower-libs/bootstrap/dist/js/bootstrap",
   requirejs: "bower-libs/requirejs/require",
   "google-code-prettify": "bower-libs/google-code-prettify/src/prettify",
