@@ -18,7 +18,6 @@ import com.evernote.edam.notestore.NoteList;
 import com.evernote.edam.type.Note;
 import com.evernote.edam.type.NoteAttributes;
 import com.evernote.edam.type.Notebook;
-import com.evernote.edam.type.SavedSearch;
 import com.evernote.thrift.TException;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
