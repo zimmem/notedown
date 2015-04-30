@@ -16,30 +16,36 @@ import com.evernote.thrift.transport.TTransportException;
 
 public class EvernoteClientFactory implements InitializingBean {
 
-    @Autowired
-    private ITokenHolder     tokenHolder;
+	@Autowired
+	private ITokenHolder tokenHolder;
 
-    @Value("${evernote.endpoint}")
-    private String          endpoint;
+	@Value("${evernote.endpoint}")
+	private String endpoint;
 
-    private EvernoteService service;
+	private EvernoteService service;
 
-    public NoteStoreClient createNoteStoreClient() throws EDAMUserException, EDAMSystemException,
-                                                  TException {
-        ClientFactory clientFactory = new ClientFactory(new EvernoteAuth(this.service,
-                                                                         tokenHolder.getToken()));
-        return clientFactory.createNoteStoreClient();
-    }
+	public NoteStoreClient createNoteStoreClient() throws EDAMUserException,
+			EDAMSystemException, TException {
+		ClientFactory clientFactory = new ClientFactory(new EvernoteAuth(
+				this.service, tokenHolder.getToken()));
+		return clientFactory.createNoteStoreClient();
+	}
 
-    public UserStoreClient createUserStoreCLient() throws TTransportException {
-        ClientFactory clientFactory = new ClientFactory(new EvernoteAuth(this.service,
-                                                                         tokenHolder.getToken()));
-        return clientFactory.createUserStoreClient();
-    }
+	public UserStoreClient createUserStoreClient() throws TTransportException {
+		ClientFactory clientFactory = new ClientFactory(new EvernoteAuth(
+				this.service, tokenHolder.getToken()));
+		return clientFactory.createUserStoreClient();
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        service = "SANDBOX".equals(endpoint) ? EvernoteService.SANDBOX : "YINXIANG".equals(endpoint) ? EvernoteService.YINXIANG : EvernoteService.PRODUCTION;
+	public EvernoteService getService() {
+		return service;
+	}
 
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		service = "SANDBOX".equals(endpoint) ? EvernoteService.SANDBOX
+				: "YINXIANG".equals(endpoint) ? EvernoteService.YINXIANG
+						: EvernoteService.PRODUCTION;
+
+	}
 }

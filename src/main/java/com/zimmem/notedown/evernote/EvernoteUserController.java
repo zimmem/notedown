@@ -22,7 +22,7 @@ public class EvernoteUserController {
 
     @RequestMapping("/user")
     public User detail() throws EDAMUserException, EDAMSystemException, TException {
-        UserStoreClient userStore = clientFactory.createUserStoreCLient();
+        UserStoreClient userStore = clientFactory.createUserStoreClient();
         return userStore.getUser();
     }
 
