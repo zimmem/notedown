@@ -102,13 +102,13 @@ define([
 		
 	}
 
-	FileDescriptor.prototype.update = function(target){
+	FileDescriptor.prototype.update = function(target, callback){
 		_.extend(this.note, target);
 		if(target.content){
 			this.content = target.content;
 			delete this.note.content;
 		}
-		this.store();
+		this.store(callback);
 		
 	};
 	

@@ -99,7 +99,7 @@ public class EvernoteNoteContrller {
 		String shardId = userStore.getUser().getShardId();
 		NoteStoreClient noteStore = clientFactory.createNoteStoreClient();
 		String shareKey = noteStore.shareNote(guid);
-		return clientFactory.getService().getHost() + '/' + "/shard/" + shardId
+		return clientFactory.getService().getHost() + "/shard/" + shardId
 				+ "/sh/" + guid + "/" + shareKey;
 	}
 

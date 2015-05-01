@@ -103,7 +103,9 @@ define([
 
 		// Create the file descriptor
 		var fileDesc = new FileDescriptor(fileIndex);
-		fileDesc.store(function(){
+		fileDesc.update({
+			localEdite:true
+		},function(){
 			callback && callback(fileDesc);
 			eventMgr.onFileCreated(fileDesc);
 		});

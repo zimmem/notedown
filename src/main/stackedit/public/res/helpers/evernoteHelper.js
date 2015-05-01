@@ -1,15 +1,6 @@
-define([
-    "jquery",
-     'underscore',
-     "constants", 
-     "core", 
-     "utils", 
-     "storage", 
-     "logger", 
-	"eventMgr", 
-	"classes/AsyncTask", 
-	'codeTheme' ], 
-function($, _, C, core, utils, storage, log, eventMgr, AsyncTask, codeTheme) {
+define([ "jquery", 'underscore', "constants", "core", "utils", "storage",
+		"logger", "eventMgr", "classes/AsyncTask", 'codeTheme' ], function($,
+		_, C, core, utils, storage, log, eventMgr, AsyncTask, codeTheme) {
 
 	var evernoteHelper = {};
 
@@ -19,7 +10,7 @@ function($, _, C, core, utils, storage, log, eventMgr, AsyncTask, codeTheme) {
 		if (!isListenAuthenticate) {
 			window.addEventListener('message', function(e) {
 				if (e.origin == location.origin) {
-					if(e.data === 'evernote.authenticate.success'){
+					if (e.data === 'evernote.authenticate.success') {
 						evernoteHelper.getUser();
 						storage['evernote.login'] = true;
 					}
@@ -38,120 +29,121 @@ function($, _, C, core, utils, storage, log, eventMgr, AsyncTask, codeTheme) {
 		checkAuth(task);
 
 		var result = null;
-		task.onRun(function(){
+		task.onRun(function() {
 			$.ajax({
 				url : "/evernote/notes",
-				success : function(notes){
+				success : function(notes) {
 					result = notes;
 					task.chain();
 				},
-				error : function(){
+				error : function() {
 					task.error();
 				}
 			});
 		});
-		task.onError(function(e){
+		task.onError(function(e) {
 			callback(e);
 		});
-		task.onSuccess(function(){
+		task.onSuccess(function() {
 			callback(undefined, result);
 		});
 		task.enqueue();
 	};
-	
-	evernoteHelper.downloadNote = function(guid, callback){
+
+	evernoteHelper.downloadNote = function(guid, callback) {
 		var task = new AsyncTask();
 		checkAuth(task);
 
 		var result = null;
-		task.onRun(function(){
+		task.onRun(function() {
 			$.ajax({
 				url : "/evernote/notes/" + guid,
-				success : function(note){
+				success : function(note) {
 					result = note;
 					task.chain();
 				},
-				error : function(){
+				error : function() {
 					task.error();
 				}
 			});
 		});
-		task.onError(function(e){
+		task.onError(function(e) {
 			callback(e);
 		});
-		task.onSuccess(function(){
+		task.onSuccess(function() {
 			callback(undefined, result);
 		});
 		task.enqueue();
 	};
-	
-	
-	evernoteHelper.postNote = function(file, callback){
-		
-		if(!file){
+
+	evernoteHelper.postNote = function(file, callback) {
+
+		if (!file) {
 			return;
 		}
-		
-		var url = file.guid ? '/evernote/notes/' + file.guid : '/evernote/notes';
+
+		var url = file.guid ? '/evernote/notes/' + file.guid
+				: '/evernote/notes';
 		var method = file.guid ? 'PUT' : 'POST';
 		var markdown = file.content;
 		var $clone = $('#preview-contents').clone();
-		
-		applayCss(codeTheme.element.sheet.rules,  $clone);
-		
-		//remove all unsupport attribute
+
+		applayCss(codeTheme.element.sheet.rules, $clone);
+
+		// remove all unsupport attribute
 		removeAttribute($clone, 'id');
 		removeAttribute($clone, 'class');
-		
-		//暂时这么处理 br吧
-		var html =  $clone.html().replace(/<br>/g, "<br/>").replace(/<hr>/g, "<hr/>");
+
+		// 暂时这么处理 br吧
+		var html = $clone.html().replace(/<br>/g, "<br/>").replace(/<hr>/g,
+				"<hr/>");
 		console.info(html);
-		html = [
-            '<div>',
-            html,
-            '<center style="display:none;">',
-            markdown,
-            '</center>',
-            '</div>'
-        ].join('');
-		
+		html = [ '<div>', html, '<center style="display:none;">', markdown,
+				'</center>', '</div>' ].join('');
+
 		var task = new AsyncTask();
 		checkAuth(task);
-		task.onRun(function(){
-			$.ajax({
-				url : url ,
-				type : method,
-				contentType: "application/json",
-				beforeSend: function(xhrObj){
-					xhrObj.setRequestHeader("Content-Type","application/json");
-					xhrObj.setRequestHeader("Accept","application/json");
-				},
-				data : JSON.stringify(_.extend(_.clone(file.note), {content: html})),
-				success : function(note){
-					file.update(_.extend(note, {localEdite: false}));
-					task.chain();
-				},
-				error : function(){
-					task.error();
-				}
-				
-			});
+		task.onRun(function() {
+			$
+					.ajax({
+						url : url,
+						type : method,
+						contentType : "application/json",
+						beforeSend : function(xhrObj) {
+							xhrObj.setRequestHeader("Content-Type",
+									"application/json");
+							xhrObj.setRequestHeader("Accept",
+									"application/json");
+						},
+						data : JSON.stringify(_.extend(_.clone(file.note), {
+							content : html
+						})),
+						success : function(note) {
+							file.update(_.extend(note, {
+								localEdite : false
+							}));
+							task.chain();
+						},
+						error : function() {
+							task.error();
+						}
+
+					});
 		});
-		task.onError(function(e){
+		task.onError(function(e) {
 			callback(e);
 		});
-		task.onSuccess(function(){
+		task.onSuccess(function() {
 			callback();
 		});
 		task.enqueue();
-		
-		
+
 	};
 
 	function checkAuth(task) {
-		if(storage['evernote.login'] ){
+		if (storage['evernote.login']) {
 			return;
-		}else{
+		} else {
 			task.error(new Error("Please connect to Evernote first!"));
 		}
 	}
@@ -168,34 +160,84 @@ function($, _, C, core, utils, storage, log, eventMgr, AsyncTask, codeTheme) {
 					$('#evernote-connector').hide();
 					task.chain();
 				},
-				error: function(){
+				error : function() {
 					task.error("Error occurred while fetch user info");
 				}
 			});
 		});
 		task.enqueue();
 	};
+
+	evernoteHelper.shareNote = function(file, callback) {
+		var task = new AsyncTask();
+		if (file.localEdite) {
+			evernoteHelper.postNote(file, _invokeShare);
+		}else{
+			_invokeShare();
+		}
+		
+		task.enqueue();
+		function _invokeShare(e){
+			if(e){
+				return task.error("");
+			}
+			checkAuth(task);
+			task.onRun(function() {
+				$.ajax({
+					url : '/evernote/notes/' + file.guid + '/share',
+					success : function(url) {
+						callback(url)
+						task.chain();
+					},
+					error : function() {
+						task.error("Error occurred while share note");
+					}
+				});
+			});
+		}
+	};
 	
+	evernoteHelper.stopShare = function(guid, callback){
+		var task = new AsyncTask();
+		checkAuth(task);
+		task.onRun(function() {
+			$.ajax({
+				url : '/evernote/notes/' + guid + '/share/stop',
+				success : function() {
+					callback()
+					task.chain();
+				},
+				error : function() {
+					task.error("Error occurred while share note");
+				}
+			});
+		});
+		task.onError (function(){
+			callback();
+		});
+		task.enqueue();
+	};
+	
+
 	// ready 时尝试拉取用户信息
-	eventMgr.addListener('onReady', function(){
+	eventMgr.addListener('onReady', function() {
 		evernoteHelper.getUser();
 	});
-	
-	function removeAttribute($root, attName){
+
+	function removeAttribute($root, attName) {
 		$root.removeAttr(attName);
-		$root.children().each(function(i, e){
+		$root.children().each(function(i, e) {
 			removeAttribute($(e), attName);
 		});
 	}
-	
 
-	function applayCss(rules , $root){
-		_.each(rules, function(rule){
-			$root.find(rule.selectorText).each(function(i, e){
+	function applayCss(rules, $root) {
+		_.each(rules, function(rule) {
+			$root.find(rule.selectorText).each(function(i, e) {
 				e.style.cssText += rule.style.cssText;
 			});
 		});
 	}
-	
+
 	return evernoteHelper;
 });
