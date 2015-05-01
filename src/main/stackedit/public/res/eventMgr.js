@@ -224,8 +224,8 @@ define([
 	addEventHook("onNotesRefresh");
 	
 	
-	addEventHook("onCodeThemeInited");
-	addEventHook("onCodeThemeCreated");
+	addEventHook("onPreviewThemeInited");
+	addEventHook("onPreviewThemeCreated");
 	
 
 	var onPreviewFinished = createEventHook("onPreviewFinished");

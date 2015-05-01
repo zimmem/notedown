@@ -68,11 +68,11 @@ define([
 	
 	noteMgr.shareNote = function(file, callback){
 		helper.shareNote(file, callback);
-	}
+	};
 	
 	noteMgr.stopShare = function(guid, callback){
 		helper.stopShare(guid, callback);
-	}
+	};
 	
 	eventMgr.onNoteMgrCreated(noteMgr);
 	

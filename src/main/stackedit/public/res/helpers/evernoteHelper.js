@@ -1,6 +1,6 @@
 define([ "jquery", 'underscore', "constants", "core", "utils", "storage",
-		"logger", "eventMgr", "classes/AsyncTask", 'codeTheme' ], function($,
-		_, C, core, utils, storage, log, eventMgr, AsyncTask, codeTheme) {
+		"logger", "eventMgr", "classes/AsyncTask", 'previewTheme' ], function($,
+		_, C, core, utils, storage, log, eventMgr, AsyncTask, previewTheme) {
 
 	var evernoteHelper = {};
 
@@ -87,19 +87,27 @@ define([ "jquery", 'underscore', "constants", "core", "utils", "storage",
 		var method = file.guid ? 'PUT' : 'POST';
 		var markdown = file.content;
 		var $clone = $('#preview-contents').clone();
+		$clone.find('wmd-preview').remove();
 
-		applayCss(codeTheme.element.sheet.rules, $clone);
+		applayCss(previewTheme.element.sheet.rules, $clone);
 
 		// remove all unsupport attribute
 		removeAttribute($clone, 'id');
 		removeAttribute($clone, 'class');
 
 		// 暂时这么处理 br吧
-		var html = $clone.html().replace(/<br>/g, "<br/>").replace(/<hr>/g,
-				"<hr/>");
+		var html = $clone.html()
+			.replace(/<br>/g, "<br/>")
+			.replace(/<hr([^>\/])*>/g, function(a ){
+				return a.substr(0, a.length-1) + '/>';
+			});
 		console.info(html);
-		html = [ '<div>', html, '<center style="display:none;">', markdown,
-				'</center>', '</div>' ].join('');
+		html = [ '<div style="font-size:16px;">', html, 
+		         '<center style="display:none;">', 
+		         markdown,
+				'</center>', 
+				'</div>' 
+				].join('');
 
 		var task = new AsyncTask();
 		checkAuth(task);
@@ -170,13 +178,6 @@ define([ "jquery", 'underscore', "constants", "core", "utils", "storage",
 
 	evernoteHelper.shareNote = function(file, callback) {
 		var task = new AsyncTask();
-		if (file.localEdite) {
-			evernoteHelper.postNote(file, _invokeShare);
-		}else{
-			_invokeShare();
-		}
-		
-		task.enqueue();
 		function _invokeShare(e){
 			if(e){
 				return task.error("");
@@ -186,7 +187,7 @@ define([ "jquery", 'underscore', "constants", "core", "utils", "storage",
 				$.ajax({
 					url : '/evernote/notes/' + file.guid + '/share',
 					success : function(url) {
-						callback(url)
+						callback(url);
 						task.chain();
 					},
 					error : function() {
@@ -195,6 +196,14 @@ define([ "jquery", 'underscore', "constants", "core", "utils", "storage",
 				});
 			});
 		}
+		if (file.localEdite) {
+			evernoteHelper.postNote(file, _invokeShare);
+		}else{
+			_invokeShare();
+		}
+		
+		task.enqueue();
+		
 	};
 	
 	evernoteHelper.stopShare = function(guid, callback){
@@ -204,7 +213,7 @@ define([ "jquery", 'underscore', "constants", "core", "utils", "storage",
 			$.ajax({
 				url : '/evernote/notes/' + guid + '/share/stop',
 				success : function() {
-					callback()
+					callback();
 					task.chain();
 				},
 				error : function() {
