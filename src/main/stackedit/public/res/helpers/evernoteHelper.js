@@ -104,7 +104,7 @@ define([ "jquery", 'underscore', "constants", "core", "utils", "storage",
 		console.info(html);
 		html = [ '<div style="font-size:16px;">', html, 
 		         '<center style="display:none;">', 
-		         markdown,
+		         $('<div/>').text(markdown).html(),
 				'</center>', 
 				'</div>' 
 				].join('');

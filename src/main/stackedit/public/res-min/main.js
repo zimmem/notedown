@@ -24719,7 +24719,7 @@ this.DIFF_EQUAL = DIFF_EQUAL, define("diff_match_patch_uncompressed", function(e
    var h = s.html().replace(/<br>/g, "<br/>").replace(/<hr([^>\/])*>/g, function(e) {
     return e.substr(0, e.length - 1) + "/>";
    });
-   console.info(h), h = [ '<div style="font-size:16px;">', h, '<center style="display:none;">', a, "</center>", "</div>" ].join("");
+   console.info(h), h = [ '<div style="font-size:16px;">', h, '<center style="display:none;">', e("<div/>").text(a).html(), "</center>", "</div>" ].join("");
    var f = new l();
    u(f), f.onRun(function() {
     e.ajax({
